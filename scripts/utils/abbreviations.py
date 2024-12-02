@@ -1,9 +1,9 @@
 #compiled from: https://www.webopedia.com/reference/twitter-dictionary-guide/
 abbrevations = {
-    "i do nt know": "idk",
+    "i don't know": "idk",
     "right now": "rn",
     "oh my god": "omg",  
-    "i do nt care": "idc",
+    "i don't care": "idc",
     "laugh out loud": "lol", 
     "brother":"bro", 
     "direct message": "dm",

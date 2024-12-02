@@ -56,5 +56,5 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base")
     ds = load_dataset("cardiffnlp/tweet_eval", "emoji")
     df = get_calcuations(abbreviation_dict=subset, tokenizer=tokenizer, model=bertweet, dataset=ds)
-    df.to_csv("./test2.csv", index=False)
+    df.to_csv("./test.csv", index=False)
     # df.to_csv("./data_df.csv", index=False)

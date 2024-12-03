@@ -42,6 +42,7 @@ pexpect==4.9.0
 platformdirs==4.3.6
 prompt_toolkit==3.0.48
 propcache==0.2.0
+protobuf==5.28.3
 psutil==6.1.0
 ptyprocess==0.7.0
 pure_eval==0.2.3
@@ -54,9 +55,12 @@ pyzmq==26.2.0
 regex==2024.11.6
 requests==2.32.3
 safetensors==0.4.5
+scikit-learn==1.5.2
+scipy==1.14.1
 six==1.16.0
 stack-data==0.6.3
 sympy==1.13.3
+threadpoolctl==3.5.0
 tokenizers==0.20.3
 torch==2.2.2
 tornado==6.4.2

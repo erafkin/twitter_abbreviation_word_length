@@ -1,3 +1,0 @@
-abbreviation,full_length,count_abbr,count_fl,abbr_first_token_surprisal_mean,abbr_first_token_surprisal_median,abbr_mask_all_surprisal_mean,abbr_mask_all_surprisal_median,abbr_sequential_surprisal_mean,abbr_sequential_surprisal_median,fl_first_token_surprisal_mean,fl_first_token_surprisal_median,fl_mask_all_surprisal_mean,fl_mask_all_surprisal_median,fl_sequential_surprisal_mean,fl_sequential_surprisal_median
-idk,i don't know,36,64,37.46132,38.87339,37.46132,38.87339,37.46132,38.87339,34.27896,34.160316,109.70666,115.751915,225.19197,239.53851
-omg,oh my god,167,14,39.768925,41.48423,39.768925,41.48423,39.768925,41.48423,39.795784,42.59929,99.686195,100.89047,195.17567,195.72067

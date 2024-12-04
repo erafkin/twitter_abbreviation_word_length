@@ -67,7 +67,6 @@ def get_calcuations(abbreviation_dict, tokenizer, model, dataset):
         fl_surprisals_first_token = np.array(fl_surprisals_first_token)
         fl_surprisals_mask_all = np.array(fl_surprisals_mask_all)
         fl_surprisals_sequential = np.array(fl_surprisals_sequential)
-        print(fl_surprisals_first_token, fl_surprisals_mask_all, fl_surprisals_sequential)
         df_arr.append([abbr, 
                        full_length, 
                        count_abbr, 
@@ -115,6 +114,6 @@ if __name__ == "__main__":
     bertweet = AutoModelForMaskedLM.from_pretrained("vinai/bertweet-base")
     tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base")
     ds = load_dataset("cardiffnlp/tweet_eval", "emoji")
-    df = get_calcuations(abbreviation_dict=subset, tokenizer=tokenizer, model=bertweet, dataset=ds)
-    df.to_csv("./test.csv", index=False)
-    # df.to_csv("./data_df.csv", index=False)
+    df = get_calcuations(abbreviation_dict=abbrevations, tokenizer=tokenizer, model=bertweet, dataset=ds)
+    # df.to_csv("./test.csv", index=False)
+    df.to_csv("./data_df.csv", index=False)

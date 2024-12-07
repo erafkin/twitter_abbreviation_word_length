@@ -36,7 +36,6 @@ def calculate_phrase_surprisal(model, tokenizer, tweet, phrase):
                     full_phrase_in_tweet = False
         if full_phrase_in_tweet:
             phrase_mask_ids.append(phrase_masks)
-    first_token_surprisals = []
     mask_all_surprisals = []
     sequential_mask_surprisals = []
 
@@ -64,10 +63,9 @@ def calculate_phrase_surprisal(model, tokenizer, tweet, phrase):
             probs =  torch.nn.functional.softmax(logits[0, pmi, :], dim=0)
             word_idx = tokenizer.convert_tokens_to_ids(tokenized_phrase[idx])
             surprisal = -torch.log2(probs[word_idx]).detach().numpy()
-            if idx == 0:
-                first_token_surprisals.append(surprisal)
+            
             phrase_surprisals.append(surprisal)
-        mask_all_surprisals.append(np.sum(phrase_surprisals))
+        mask_all_surprisals.append(phrase_surprisals)
 
         #now do the sequential mapping if possible
         words1 = words
@@ -92,6 +90,5 @@ def calculate_phrase_surprisal(model, tokenizer, tweet, phrase):
                 word_idx = tokenizer.convert_tokens_to_ids(tokenized_phrase[0])
                 surprisal = -torch.log2(probs[word_idx]).detach().numpy()
                 phrase_surprisals.append(surprisal)
-            sequential_mask_surprisals.append(np.sum(phrase_surprisals))
-        
-    return first_token_surprisals, mask_all_surprisals, sequential_mask_surprisals
+            sequential_mask_surprisals.append(phrase_surprisals)      
+    return  mask_all_surprisals, sequential_mask_surprisals

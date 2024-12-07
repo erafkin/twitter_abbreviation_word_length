@@ -44,76 +44,63 @@ def get_calcuations(abbreviation_dict, tokenizer, model, dataset):
                 if abbr_in_tweet > 0:
                     count_abbr+= abbr_in_tweet
                     tweets_with_abbr.append(dataset[split][i]["text"])
-        abbr_surprisals_first_token= []
+        abbr_mask_all_avg_per_token= []
+        abbr_seq_avg_per_token =[]
         abbr_surprisals_mask_all= []
         abbr_surprisals_sequential= []
         for tweet in tqdm(tweets_with_abbr):
-            ft, ma, seq = calculate_phrase_surprisal(model, tokenizer=tokenizer, tweet=tweet, phrase=abbr)
-            abbr_surprisals_first_token += ft
+            ma, seq = calculate_phrase_surprisal(model, tokenizer=tokenizer, tweet=tweet, phrase=abbr)
             abbr_surprisals_mask_all += ma
             abbr_surprisals_sequential += seq
-        abbr_surprisals_first_token = np.array(abbr_surprisals_first_token)
-        abbr_surprisals_mask_all = np.array(abbr_surprisals_mask_all)
-        abbr_surprisals_sequential = np.array(abbr_surprisals_sequential)
+        abbr_mask_all_avg_per_token = np.array([np.average(s) for s in abbr_surprisals_mask_all])
+        abbr_seq_avg_per_token = np.array([np.average(s) for s in abbr_surprisals_sequential])
+        abbr_surprisals_mask_all = np.array([np.sum(s) for s in abbr_surprisals_mask_all])
+        abbr_surprisals_sequential = np.array([np.sum(s) for s in abbr_surprisals_sequential])
 
-        fl_surprisals_first_token= []
+        fl_mask_all_avg_per_token= []
+        fl_seq_avg_per_token= []
         fl_surprisals_mask_all= []
         fl_surprisals_sequential= []
         for tweet in tqdm(tweets_with_fl):
-            ft, ma, seq = calculate_phrase_surprisal(model, tokenizer=tokenizer, tweet=tweet, phrase=full_length)
-            fl_surprisals_first_token += ft
+            ma, seq = calculate_phrase_surprisal(model, tokenizer=tokenizer, tweet=tweet, phrase=full_length)
             fl_surprisals_mask_all += ma
             fl_surprisals_sequential += seq
-        fl_surprisals_first_token = np.array(fl_surprisals_first_token)
-        fl_surprisals_mask_all = np.array(fl_surprisals_mask_all)
-        fl_surprisals_sequential = np.array(fl_surprisals_sequential)
+        fl_mask_all_avg_per_token = np.array([np.average(s) for s in abbr_surprisals_mask_all])
+        fl_seq_avg_per_token = np.array([np.average(s) for s in fl_surprisals_sequential])
+        fl_surprisals_mask_all = np.array([np.sum(s) for s in fl_surprisals_mask_all])
+        fl_surprisals_sequential = np.array([np.sum(s) for s in fl_surprisals_sequential])
         df_arr.append([abbr, 
                        full_length, 
                        count_abbr, 
                        count_fl, 
-                       np.mean(abbr_surprisals_first_token), 
-                       np.median(abbr_surprisals_first_token),
+                       np.mean(abbr_mask_all_avg_per_token),
+                       np.mean(abbr_seq_avg_per_token),    
                        np.mean(abbr_surprisals_mask_all), 
-                       np.median(abbr_surprisals_mask_all),
                        np.mean(abbr_surprisals_sequential), 
-                       np.median(abbr_surprisals_sequential),
-                       np.mean(fl_surprisals_first_token), 
-                       np.median(fl_surprisals_first_token),
+                       np.mean(fl_mask_all_avg_per_token),
+                       np.mean(fl_seq_avg_per_token),             
                        np.mean(fl_surprisals_mask_all), 
-                       np.median(fl_surprisals_mask_all),
                        np.mean(fl_surprisals_sequential), 
-                       np.median(fl_surprisals_sequential),
                      ])
     
     df = pd.DataFrame(df_arr, columns=["abbreviation", 
                                        "full_length", 
                                        "count_abbr", 
                                        "count_fl", 
-                                       "abbr_first_token_surprisal_mean", 
-                                       "abbr_first_token_surprisal_median", 
+                                       "abbr_mask_all_avg_per_token",
+                                       "abbr_seq_avg_per_token", 
                                        "abbr_mask_all_surprisal_mean", 
-                                       "abbr_mask_all_surprisal_median",
-                                       "abbr_sequential_surprisal_mean", 
-                                       "abbr_sequential_surprisal_median",
-                                       "fl_first_token_surprisal_mean", 
-                                       "fl_first_token_surprisal_median", 
+                                       "abbr_sequential_surprisal_mean",
+                                       "fl_mask_all_avg_per_token", 
+                                       "fl_seq_avg_per_token",
                                        "fl_mask_all_surprisal_mean", 
-                                       "fl_mask_all_surprisal_median",
-                                       "fl_sequential_surprisal_mean", 
-                                       "fl_sequential_surprisal_median"])
+                                       "fl_sequential_surprisal_mean"])
     return df
 
 if __name__ == "__main__":
-    subset={
-        "i don't know": "idk", 
-        # "brother":"bro", 
-        "oh my god": "omg",
-        # "direct message": "dm",
-        # "retweet": "rt"
-        }
     bertweet = AutoModelForMaskedLM.from_pretrained("vinai/bertweet-base")
     tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base")
     ds = load_dataset("cardiffnlp/tweet_eval", "emoji")
     df = get_calcuations(abbreviation_dict=abbrevations, tokenizer=tokenizer, model=bertweet, dataset=ds)
-    # df.to_csv("./test.csv", index=False)
-    df.to_csv("./data_df.csv", index=False)
+    df.to_csv("./data_df_per_token_avgs.csv", index=False)
+

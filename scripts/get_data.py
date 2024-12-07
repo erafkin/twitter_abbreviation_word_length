@@ -87,14 +87,11 @@ def get_calcuations(abbreviation_dict, tokenizer, model, datasets):
     return df_arr
 
 if __name__ == "__main__":
-    subset={
-        "oh my god": "omg"
-    }
     configs = ['emoji', 'emotion', 'hate', 'irony', 'offensive', 'sentiment', 'stance_abortion', 'stance_atheism', 'stance_climate', 'stance_feminist', 'stance_hillary']
     bertweet = AutoModelForMaskedLM.from_pretrained("vinai/bertweet-base")
     tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base")
     datasets = [load_dataset("cardiffnlp/tweet_eval", config) for config in configs]
-    df_arr = get_calcuations(abbreviation_dict=subset, tokenizer=tokenizer, model=bertweet, datasets=datasets)
+    df_arr = get_calcuations(abbreviation_dict=abbrevations, tokenizer=tokenizer, model=bertweet, datasets=datasets)
     df = pd.DataFrame(df_arr, columns=["abbreviation", 
                                        "full_length", 
                                        "count_abbr", 

@@ -65,7 +65,7 @@ def get_calcuations(abbreviation_dict, tokenizer, model, dataset):
             ma, seq = calculate_phrase_surprisal(model, tokenizer=tokenizer, tweet=tweet, phrase=full_length)
             fl_surprisals_mask_all += ma
             fl_surprisals_sequential += seq
-        fl_mask_all_avg_per_token = np.array([np.average(s) for s in abbr_surprisals_mask_all])
+        fl_mask_all_avg_per_token = np.array([np.average(s) for s in fl_surprisals_sequential])
         fl_seq_avg_per_token = np.array([np.average(s) for s in fl_surprisals_sequential])
         fl_surprisals_mask_all = np.array([np.sum(s) for s in fl_surprisals_mask_all])
         fl_surprisals_sequential = np.array([np.sum(s) for s in fl_surprisals_sequential])

@@ -15,6 +15,7 @@ def get_calcuations(abbreviation_dict, tokenizer, model, datasets):
         if  tokenizer.convert_ids_to_tokens(tokenizer.convert_tokens_to_ids(abbr)) == tokenizer.unk_token:
             print("abbreviation unknown: ", abbr)
             pass
+        print("abbreviation: ", abbr)
         count_fl = 0
         count_abbr = 0
         tweets_with_abbr = []

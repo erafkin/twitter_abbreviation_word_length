@@ -45,26 +45,32 @@ def calculate_phrase_surprisal(model, tokenizer, tweet, phrase):
         for idx, pmi in enumerate(phrase_mask_group):
             words1 = words[:]
             for p in phrase_mask_group[idx:]:
-                words1[p] = tokenizer.mask_token
-            #get input ids and truncate if necessary
-            input_ids = tokenizer.encode(tokenizer.convert_tokens_to_string(words1), padding="max_length", max_length=MAX_LENGTH)
-            if len(input_ids) > MAX_LENGTH:
-                min_idx = phrase_mask_group[0] - int(MAX_LENGTH/2)
-                if min_idx<0:
-                    min_idx=0
-                max_idx = phrase_mask_group[0]+int(MAX_LENGTH/2)
-                if max_idx>len(input_ids):
-                    max_idx = len(input_ids)-1
-                input_ids = input_ids[min_idx:max_idx]
-            # get logits from model
-            logits = model(torch.tensor([input_ids])).logits
+                try:
+                    words1[p] = tokenizer.mask_token
+                    # get input ids and truncate if necessary
+                    input_ids = tokenizer.encode(tokenizer.convert_tokens_to_string(words1), padding="max_length", max_length=MAX_LENGTH)
+                    if len(input_ids) > MAX_LENGTH:
+                        min_idx = phrase_mask_group[0] - int(MAX_LENGTH/2)
+                        if min_idx<0:
+                            min_idx=0
+                        max_idx = phrase_mask_group[0]+int(MAX_LENGTH/2)
+                        if max_idx>len(input_ids):
+                            max_idx = len(input_ids)-1
+                        input_ids = input_ids[min_idx:max_idx]
+                    # get logits from model
+                    logits = model(torch.tensor([input_ids])).logits
 
-            # get prob for the specific phrase token
-            probs =  torch.nn.functional.softmax(logits[0, pmi, :], dim=0)
-            word_idx = tokenizer.convert_tokens_to_ids(tokenized_phrase[idx])
-            surprisal = -torch.log2(probs[word_idx]).detach().numpy()
+                    # get prob for the specific phrase token
+                    probs =  torch.nn.functional.softmax(logits[0, pmi, :], dim=0)
+                    word_idx = tokenizer.convert_tokens_to_ids(tokenized_phrase[idx])
+                    surprisal = -torch.log2(probs[word_idx]).detach().numpy()
+                    
+                    phrase_surprisals.append(surprisal)
+                except Exception as e:
+                    print(e)
+                    print("words: ", words)
+                    print("index that is crashing: ", p)
             
-            phrase_surprisals.append(surprisal)
         mask_l2r_surprisals.append(phrase_surprisals)
 
         #now do the sequential mapping if possible
@@ -76,20 +82,28 @@ def calculate_phrase_surprisal(model, tokenizer, tweet, phrase):
             for pmi in phrase_mask_group:
                 # mask just the one token, leave the rest
                 words1 = words[:] 
-                words1[pmi] = tokenizer.mask_token
-                input_ids = tokenizer.encode(tokenizer.convert_tokens_to_string(words1), padding="max_length", max_length=MAX_LENGTH)
-                if len(input_ids) > MAX_LENGTH:
-                    min_idx = mask_ids[0][0] - int(MAX_LENGTH/2)
-                    if min_idx<0:
-                        min_idx=0
-                    max_idx = mask_ids[0][0]+int(MAX_LENGTH/2)
-                    if max_idx>len(input_ids):
-                        max_idx = len(input_ids)-1
-                    input_ids = input_ids[min_idx:max_idx]
-                logits = model(torch.tensor([input_ids])).logits
-                probs =  torch.nn.functional.softmax(logits[0, pmi, :], dim=0)
-                word_idx = tokenizer.convert_tokens_to_ids(tokenized_phrase[0])
-                surprisal = -torch.log2(probs[word_idx]).detach().numpy()
-                phrase_surprisals.append(surprisal)
+                try:
+                    words1[pmi] = tokenizer.mask_token
+                    input_ids = tokenizer.encode(tokenizer.convert_tokens_to_string(words1), padding="max_length", max_length=MAX_LENGTH)
+                    if len(input_ids) > MAX_LENGTH:
+                        min_idx = mask_ids[0][0] - int(MAX_LENGTH/2)
+                        if min_idx<0:
+                            min_idx=0
+                        max_idx = mask_ids[0][0]+int(MAX_LENGTH/2)
+                        if max_idx>len(input_ids):
+                            max_idx = len(input_ids)-1
+                        input_ids = input_ids[min_idx:max_idx]
+                    logits = model(torch.tensor([input_ids])).logits
+                    probs =  torch.nn.functional.softmax(logits[0, pmi, :], dim=0)
+                    word_idx = tokenizer.convert_tokens_to_ids(tokenized_phrase[0])
+                    surprisal = -torch.log2(probs[word_idx]).detach().numpy()
+                    phrase_surprisals.append(surprisal)
+                except Exception as e:
+                    print(e)
+                    print("words: ", words)
+                    print("index that is crashing: ", pmi)
+
+                
+                
             sequential_mask_surprisals.append(phrase_surprisals)      
     return  mask_l2r_surprisals, sequential_mask_surprisals

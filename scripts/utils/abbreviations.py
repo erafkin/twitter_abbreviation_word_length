@@ -7,6 +7,8 @@ abbrevations = {
     "laugh out loud": "lol", 
     "brother":"bro", 
     "direct message": "dm",
+    "what the fuck": "wtf",
+    "laughing my ass off": "lmao",
     "sorry": "sry", 
     "very": "v",
     "with": "w",

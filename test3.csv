@@ -1,0 +1,2 @@
+abbreviation,full_length,count_abbr,count_fl,abbr_mask_l2r_avg_per_token,abbr_seq_avg_per_token,abbr_mask_l2r_surprisal_mean,abbr_sequential_surprisal_mean,fl_mask_l2r_avg_per_token,fl_seq_avg_per_token,fl_mask_l2r_surprisal_mean,fl_sequential_surprisal_mean
+omg,oh my god,22,1,36.850834,36.850834,36.850834,36.850834,38.075665,37.060383,228.454,111.18115

@@ -89,9 +89,11 @@ def get_calcuations(abbreviation_dict, tokenizer, model, datasets):
 
 if __name__ == "__main__":
     configs = ['emoji', 'emotion', 'hate', 'irony', 'offensive', 'sentiment', 'stance_abortion', 'stance_atheism', 'stance_climate', 'stance_feminist', 'stance_hillary']
+    # configs = ["emotion"]
     bertweet = AutoModelForMaskedLM.from_pretrained("vinai/bertweet-base")
     tokenizer = AutoTokenizer.from_pretrained("vinai/bertweet-base")
     datasets = [load_dataset("cardiffnlp/tweet_eval", config) for config in configs]
+    subset={"oh my god": "omg"}
     df_arr = get_calcuations(abbreviation_dict=abbrevations, tokenizer=tokenizer, model=bertweet, datasets=datasets)
     df = pd.DataFrame(df_arr, columns=["abbreviation", 
                                        "full_length", 
@@ -105,5 +107,4 @@ if __name__ == "__main__":
                                        "fl_seq_avg_per_token",
                                        "fl_mask_l2r_surprisal_mean", 
                                        "fl_sequential_surprisal_mean"])
-    # df.to_csv("./data_df_per_token_avgs.csv", index=False)
-    df.to_csv("test3.csv", index=False)
+    df.to_csv("data_fix_PLL.csv", index=False)

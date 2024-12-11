@@ -8,7 +8,7 @@ Code for generating data and analysis for surprisal theory on Tweets for abbrevi
     -[`tweets.ipynb`](./notebooks/tweets.ipynb) mainly just a playground to see how to run through the data and find the relevant tweets.
     - [`word_length.ipynb`](./notebooks/word_length.ipynb) compares Twitter to Wikipedia to determine if words are shorter on Twitter than in other domains. 
 - [`scripts`](./scripts/)
-    -[`utils`](./scripts/utils/)
+    - [`utils`](./scripts/utils/)
         - [`abbreviations.py`](./scripts/utils/abbreviations.py) dictionary of the long & short form pairs
         - [`surprisal.py`](./scripts/utils/surprisal.py) calculates surprisal for phrases in a tweet. Both [PLL](https://aclanthology.org/2020.acl-main.240/) and [PLL-l2r](https://aclanthology.org/2023.acl-short.80.pdf) are calculated
         - [`TweetNormalizer.py`](./scripts/utils/TweetNormalizer.py) BERTweet normalization methods taken from the [BERTweet repository](https://github.com/VinAIResearch/BERTweet/blob/master/TweetNormalizer.py)
